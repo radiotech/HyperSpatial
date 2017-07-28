@@ -10,11 +10,11 @@ class Space(val camera: Obj, val objects: Vector[Obj]){
    * 
    */
   
-  def step(m: Map[Int,(Int,Force)]) = Space(camera.step(m.get(-1)),objects.indices.toVector.map(i=>objects(i).step(m.get(i))))
+  def step(m: Map[Int,Function[Obj.Forces,Obj.Forces]]) = Space(camera.step(m.getOrElse(-1, f=>f)),objects.indices.toVector.map(i=>objects(i).step(m.getOrElse(i,f=>f))))
   
   def view(fov: Double) = FlatSpace(objects.map {o =>
-    Obj(o.I,Obj.M(Force.zeros(o.M.D),Force.zeros(o.M.D),Force.zeros(o.M.D),o.I.points.map(p=>{
-      val newP = camera.M.pos(o.M.pos(p))
+    Obj(o.I,Obj.M(Obj.Forces.zeros(o.M.D),o.I.points.map(p=>{
+      val newP = camera.M.fs.pos(o.M.fs.pos(p))
       val scale = fov/(newP.sub.last+fov)
       p->Pt(newP.sub.map(_*scale))
     }).toMap))

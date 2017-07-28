@@ -31,9 +31,9 @@ object Main {
   
   val cols = Vector(Color.RED,Color.GREEN,Color.BLUE,Color.MAGENTA)
   
-  val objs = Vector(Obj(points,faces,cols,Force(Vector(0,0,10)),Force(2,0,.01,Vector(0,0,0d)),Force(2,0,0,Vector(0,0,0d))))
+  val objs = Vector(Obj(points,faces,cols,Obj.Forces.zeros(3).add(0,Force(3,2,10d)).add(1,Force(3,0,2,Math.PI*2/DELTA_STEP))))
   
-  val cam = Obj(Vector(),Vector(),Vector(),Force(Vector(0,0,0)),Force(2,0,Math.PI*2/DELTA_STEP*0,Vector(0,0,0d)),Force(2,0,Math.PI*2/DELTA_STEP*0,Vector(0,0,0d)))
+  val cam = Obj(Vector(),Vector(),Vector(),Obj.Forces.zeros(3).add(0,Force.zeros(3)))
   
   var SPACE = Space(cam,objs);
   var Keys: Map[Char,Int] = Map()

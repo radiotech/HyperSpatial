@@ -6,14 +6,28 @@ import space._
 class Step extends TimerTask {
   def run {
     
-    val moveVel = Main.DELTA_STEP*.003;
-    val rotVel = Main.DELTA_STEP*Math.PI*2*.002;
-    val jumpVel = Main.DELTA_STEP*Math.PI*.002;
+    val moveVel = 2*Main.DELTA_STEP*.001;
+    val rotVel = .2*Math.PI*2*Main.DELTA_STEP*.001;
+    val jumpVel = 3*Main.DELTA_STEP*.001;
     
-    var MOVE: Map[Int,(Int,Force)] = Map()
+    var MOVE: Map[Int,Function[Obj.Forces,Obj.Forces]] = Map()
+    
+    def constructMove(act: Int, t: Int, i: Int, f: Force): (Int,Function[Obj.Forces,Obj.Forces]) = (-1,{fs: Obj.Forces=>{println("w");if(act==1) fs.push(t,i,f) else fs.pull(t,i,f)}})
     
     Main.Keys.foreach(x=>{
-      if(x._1 == 'w') MOVE = MOVE+(-1->((1,Force(Vector(0,0,-moveVel*x._2)))))
+      if(x._1 == 'w') MOVE = MOVE+constructMove(x._2,100,1,Force(3,2,-moveVel))
+      if(x._1 == 's') MOVE = MOVE+constructMove(x._2,101,1,Force(3,2,moveVel))
+      if(x._1 == 'd') MOVE = MOVE+constructMove(x._2,102,1,Force(3,0,-moveVel))
+      if(x._1 == 'a') MOVE = MOVE+constructMove(x._2,103,1,Force(3,0,moveVel))
+      if(x._1 == ' ') MOVE = MOVE+constructMove(x._2,104,1,Force(3,1,-jumpVel))
+      if(x._1 == 'i') MOVE = MOVE+constructMove(x._2,201,1,Force(3,2,1,rotVel))
+      if(x._1 == 'k') MOVE = MOVE+constructMove(x._2,202,1,Force(3,1,2,rotVel))
+      if(x._1 == 'l') MOVE = MOVE+constructMove(x._2,203,1,Force(3,2,0,rotVel))
+      if(x._1 == 'j') MOVE = MOVE+constructMove(x._2,204,1,Force(3,0,2,rotVel))
+      if(x._1 == 'o') MOVE = MOVE+constructMove(x._2,205,1,Force(3,1,0,rotVel))
+      if(x._1 == 'u') MOVE = MOVE+constructMove(x._2,206,1,Force(3,0,1,rotVel))
+      
+      /*if(x._1 == 'w') MOVE = MOVE+(-1->((1,Force(Vector(0,0,-moveVel*x._2)))))
       if(x._1 == 's') MOVE = MOVE+(-1->((1,Force(Vector(0,0,moveVel*x._2)))))
       if(x._1 == 'd') MOVE = MOVE+(-1->((1,Force(Vector(-moveVel*x._2,0,0)))))
       if(x._1 == 'a') MOVE = MOVE+(-1->((1,Force(Vector(moveVel*x._2,0,0)))))
@@ -23,9 +37,10 @@ class Step extends TimerTask {
       if(x._1 == 'l') MOVE = MOVE+(-1->((1,Force(3,1,3,rotVel))))
       if(x._1 == 'j') MOVE = MOVE+(-1->((1,Force(3,3,1,rotVel))))
       if(x._1 == 'o') MOVE = MOVE+(-1->((1,Force(3,1,2,rotVel))))
-      if(x._1 == 'u') MOVE = MOVE+(-1->((1,Force(3,2,1,rotVel))))
+      if(x._1 == 'u') MOVE = MOVE+(-1->((1,Force(3,2,1,rotVel))))*/
       
     })
+    
     
     Main.Keys = Map()
     
