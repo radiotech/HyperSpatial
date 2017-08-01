@@ -1,23 +1,15 @@
 package space
 
 object Face {
-  def apply(I: Face.I, M: Face.M) = new Face(I,M)
-  def apply(c: Vector[Pt]) = new Face(I(c),M())
-  
-  object I {
-    def apply(c: Vector[Pt]) = new I(c);
-  }
-  object M {
-    def apply() = new M();
-  }
-  
-  class I(val corners: Vector[Pt]) {}
-  class M() {}
+  def apply(c: Vector[Pt]) = new Face(c)
 }
 
-class Face(val I: Face.I, val M: Face.M) {
-  val D = I.corners(0).D
-  def apply(m: Map[Pt,Pt]) = I.corners.map(m(_))
-  def shard = (I.corners.combinations(I.corners.length-1).map{v=>Face(Face.I(v:+center),Face.M())},center)
-  val center = Pt(Range(1,I.corners.length,1).foldRight(I.corners(0).sub)((i,z)=>I.corners(i).addFrac(z,I.corners.length)))
+class Face(val corners: Vector[Pt]) {
+  val D = corners(0).D
+  val edgeLength = corners.combinations(2).foldRight(0d)((e,t)=>e(0).disTo(e(1))+t)
+  val center = Pt(Range(1,corners.length,1).foldRight(corners(0).sub)((i,z)=>corners(i).addFrac(z,corners.length)))
+  
+  def shard(f: Function[Face,Boolean]): List[Face] = {if(f(this)) (Face(corners.combinations(2).map{p=>p(0).avg(p(1))}.toVector)::corners.map(p=>Face(corners.map{c=>c.avg(p)})).toList).flatMap{_.shard(f)} else List(this)}
+  def view(fov: Double, f: Function[Face,Boolean], objF: Force, camF: Force): List[Face] = shard(f).map{_.view(fov,objF,camF)}
+  def view(fov: Double, objF: Force, camF: Force) = Face(corners.map{p=>camF(objF(p)).view(fov)})
 }

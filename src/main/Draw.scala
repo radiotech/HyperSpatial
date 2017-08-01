@@ -23,7 +23,7 @@ class Draw extends TimerTask {
     
     g.setColor(Color.BLACK)
      
-    val FLAT_SPACE = Main.SPACE.view(1);
+    val FLAT_SPACE = Main.SPACE.view(1,f=>f.edgeLength>2);//f=>f.center.mag/f.edgeLength<10
     
     lineDrawFlatSpace(g, FLAT_SPACE,(-1,-.5625,2,1.125));
     
@@ -32,8 +32,8 @@ class Draw extends TimerTask {
   
   def lineDrawFlatSpace(g: Graphics, w: FlatSpace, view: (Double,Double,Double,Double)) {
     w.objs.foreach { o =>
-      o.I.faces.foreach {f => {
-        f(o.M.ptMap).combinations(2).foreach { l =>
+      o.faces.foreach {f => {
+        f.corners.combinations(2).foreach { l =>
           g.drawLine(
             ((l(0).x-view._1)/view._3*Main.VIEW_WIDTH).toInt,
             ((l(0).y*(-1)-view._2)/view._4*Main.VIEW_HEIGHT).toInt,

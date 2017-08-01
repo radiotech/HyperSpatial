@@ -4,24 +4,13 @@ import java.awt.Color;
 
 object Obj {
   
-  def apply(I: Obj.I, M: Obj.M) = new Obj(I,M)
-  def apply(p: Vector[Pt], f: Vector[Face], c: Vector[Color], fs: Forces, m: Map[Pt,Pt] = Map()) = new Obj(I(p,f,c),M(fs,m))
+  def apply(f: Vector[Face], fs: Forces) = new Obj(f,fs)
   
-  object I {
-    def apply(p: Vector[Pt], f: Vector[Face], c: Vector[Color]) = new I(p,f,c);
-  }
-  object M {
-    def apply(fs: Forces, m: Map[Pt,Pt]) = new M(fs,m);
-  }
   object Forces {
     def apply(fs: List[Force], ts: Set[(Int,Int)]) = new Forces(fs,ts)
     def zeros(d: Int) = new Forces(List.tabulate(8)(_=>Force.zeros(d)), Set())
   }
   
-  class I(val points: Vector[Pt], val faces: Vector[Face], val colors: Vector[Color]) {}
-  class M(val fs: Forces, val ptMap: Map[Pt,Pt]) {
-    val D = fs.pos.D
-  }
   class Forces(val fs: List[Force], val ts: Set[(Int,Int)]) {
     val pos = fs(0)
     def vel = fs(1)
@@ -43,6 +32,10 @@ object Obj {
   }
 }
 
-class Obj(val I: Obj.I, val M: Obj.M){
-  def step(f: Function[Obj.Forces,Obj.Forces]) = Obj(I,Obj.M(f(M.fs).step,M.ptMap))
+class Obj(val faces: Vector[Face], val fs: Obj.Forces){
+  val D = fs.pos.D
+  
+  def step(f: Function[Obj.Forces,Obj.Forces]) = Obj(faces,f(fs).step)
+  def shard(f: Function[Face,Boolean]) = Obj(faces.flatMap{_.shard(f)},fs)
+  def view(fov: Double, f: Function[Face,Boolean], force: Force) = Obj(faces.flatMap{_.view(fov,f,fs.pos,force)},fs)
 }

@@ -22,7 +22,15 @@ object Main {
   //3d object
   //val points = List(Pt(0,-2,4),Pt(-3,-2,0),Pt(4,-2,-1),Pt(0,4,-2));
   
-  val points = Vector(Pt(-1,-1,-1),Pt(1.5,-1,-1),Pt(-1,1.5,-1),Pt(-1,-1,1.5))
+  val pF = Vector(Pt(0,-.5,0),Pt(45,0,45),Pt(-45,0,45),Pt(45,0,-45),Pt(-45,0,-45))
+  val fF = Vector(Face(Vector(pF(0),pF(1),pF(2))),
+                  Face(Vector(pF(0),pF(2),pF(3))),
+                  Face(Vector(pF(0),pF(3),pF(4))),
+                  Face(Vector(pF(0),pF(4),pF(1))),
+                  Face(Vector(pF(1),pF(2),pF(3))),
+                  Face(Vector(pF(3),pF(4),pF(1))))
+  
+  val points = Vector(Pt(-2,-1,-2),Pt(1.5,-1,0),Pt(0,1.5,0),Pt(0,-1,1.5))
   
   val faces = points.combinations(3).map(Face(_)).toVector//++Face(Vector(1,3,4),points).shard
   
@@ -31,9 +39,10 @@ object Main {
   
   val cols = Vector(Color.RED,Color.GREEN,Color.BLUE,Color.MAGENTA)
   
-  val objs = Vector(Obj(points,faces,cols,Obj.Forces.zeros(3).add(0,Force(3,2,10d)).add(1,Force(3,0,2,Math.PI*2/DELTA_STEP))))
+  val objs = Vector(Obj(faces,Obj.Forces.zeros(3).add(0,Force(3,2,10d)).add(1,Force(3,0,2,Math.PI*2/DELTA_STEP*.5)))//,
+                    /*Obj(fF   ,Obj.Forces.zeros(3))*/)
   
-  val cam = Obj(Vector(),Vector(),Vector(),Obj.Forces.zeros(3).add(0,Force.zeros(3)))
+  val cam = Obj(Vector(),Obj.Forces.zeros(3).add(0,Force(3,1,-2)))
   
   var SPACE = Space(cam,objs);
   var Keys: Map[Char,Int] = Map()
