@@ -1,5 +1,6 @@
 package space
 
+/*
 object Force {
   def apply(r: Rotation, xr: Rotation, t: Translation) = new Force(r,xr,t)
   def apply(a1: Int, a2: Int, r: Double, v: Vector[Double]) = new Force(Rotation(v.length)(a1,a2,r),Rotation(v.length)(a2,a1,r),Translation(v))
@@ -52,3 +53,29 @@ class Force(val r: Force.Rotation, val xr: Force.Rotation, val t: Force.Translat
   def x(p: Pt) = t.x(xr(p))
   def x(f: Force) = Force(xr(f.r),r(f.xr),t.x(f.t))
 }
+
+object Forces {
+  def apply(fs: List[Force], ts: Set[(Int,Int)]) = new Forces(fs,ts)
+  def zeros(d: Int) = new Forces(List.tabulate(8)(_=>Force.zeros(d)), Set())
+}
+
+class Forces(val fs: List[Force], val ts: Set[(Int,Int)]) {
+  val pos = fs(0)
+  def vel = fs(1)
+  def acc = fs(2)
+  def has(t: Int) = ts.exists(_._1 == t)
+  def set(i: Int, f: Force) = Forces(fs.indices.toList.map(a=>if(a==i) f else fs(a)),ts.filter(_._2 != i))
+  def add(i: Int, f: Force) = Forces(fs.indices.toList.map(a=>if(a==i) f(fs(a)) else fs(a)),ts)
+  def push(t: Int, i: Int, f: Force) = {println("push "+(!has(t)));if(!has(t)) Forces(fs.indices.toList.map(a=>if(a==i) f(fs(a)) else fs(a)),ts+((t,i))) else this}
+  def pull(t: Int, i: Int, f: Force) = {println("pull "+has(t));if(has(t)) Forces(fs.indices.toList.map(a=>if(a==i) f.x(fs(a)) else fs(a)),ts.filter(_._1 != t)) else this}
+  private def s(xs: List[Force]): List[Force] = {
+    if(xs.tail == Nil) xs else {
+      val t = s(xs.tail)
+      t.head(xs.head)::t
+    }
+  }
+  def step = Forces(s(fs),ts)
+  
+  
+}
+*/

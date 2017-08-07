@@ -10,6 +10,16 @@ class Step extends TimerTask {
     val rotVel = .2*Math.PI*2*Main.DELTA_STEP*.001;
     val jumpVel = 3*Main.DELTA_STEP*.001;
     
+    //Main.INSPACE.rotate(2,3,.05)
+    
+    Main.Keys.foreach(x=>{if(x._1 == '1') Main.INSPACE.rotate(0,1,.05)})
+    Main.Keys.foreach(x=>{if(x._1 == '2') Main.INSPACE.rotate(1,2,.05)})
+    Main.Keys.foreach(x=>{if(x._1 == '3') Main.INSPACE.rotate(2,0,.05)})
+    Main.Keys.foreach(x=>{if(x._1 == '4') Main.INSPACE.rotate(3,0,.05)})
+    Main.Keys.foreach(x=>{if(x._1 == '5') Main.INSPACE.rotate(3,1,.05)})
+    Main.Keys.foreach(x=>{if(x._1 == '6') Main.INSPACE.rotate(3,2,.05)})
+    
+    /*
     var MOVE: Map[Int,Function[Obj.Forces,Obj.Forces]] = Map()
     
     def constructMove(act: Int, t: Int, i: Int, f: Force): (Int,Function[Obj.Forces,Obj.Forces]) = (-1,{fs: Obj.Forces=>{println("w");if(act==1) fs.push(t,i,f) else fs.pull(t,i,f)}})
@@ -40,11 +50,13 @@ class Step extends TimerTask {
       if(x._1 == 'u') MOVE = MOVE+(-1->((1,Force(3,2,1,rotVel))))*/
       
     })
-    
+    */
     
     Main.Keys = Map()
     
-    Main.SPACE = Main.SPACE.step(MOVE)
+    //Main.SPACE = Main.SPACE.step(MOVE)
+    
+    
     /*
     val axes = Rotation(3)(0,2,Math.PI/130*steps).axes;
     val axes1 = Rotation(3)(0,1,Math.PI/70*steps*1).axes;

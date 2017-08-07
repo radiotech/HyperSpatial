@@ -1,20 +1,14 @@
 package space
 
-object Pt {
-  def apply(d: Int) = new Pt(d);
-  def apply(v: Vector[Double]): Pt = {
-    val p = new Pt(v.length)
-    p.translate(v)
-    p
-  }
+object Ptx2 {
+  def apply(p1: Pt, p2: Pt) = new Ptx2(p1,p2,p1.D);
 }
 
-class Pt(override val D: Int) extends Real {
+class Ptx2(val p1: Pt, val p2: Pt, override val D: Int) extends Real {
   
-  def apply(i: Int) = translation(i);
   
-  def cView(f: Function[Option[Pt],Option[Pt]]): List[space.Real] = {val p = f(Some(this)); if(p==None) Nil else List(p.get)}
-  def draw(g: java.awt.Graphics, f: Function[Pt,(Int, Int, Boolean)]) {println(f(this));val p = f(this); if(p._3) g.fillOval(p._1, p._2, 3, 3)}
+  def cView(f: Function[Option[Pt],Option[Pt]]): List[space.Real] = {val ps = (f(Some(p1)),f(Some(p2))); if(ps._1==None&&ps._2==None) Nil else if(ps._1!=None&&ps._2!=None) List(Ptx2(ps._1.get,ps._2.get)) else {println("Line half visible!");Nil}}
+  def draw(g: java.awt.Graphics, f: Function[Pt,(Int, Int, Boolean)]) {val ps = (f(p1),f(p2)); if(ps._1._3||ps._2._3) g.drawLine(ps._1._1, ps._1._2, ps._2._1, ps._2._2)}
   
   /*
   def dot(p: Pt): Double = Range(0,Math.min(p.D,D),1).map {i=>p(i)*sub(i)}.sum

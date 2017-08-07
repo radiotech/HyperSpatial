@@ -14,22 +14,32 @@ import javafx.scene.input.KeyCode
 import space._
 
 class Draw extends TimerTask {
+  
+  val view = (-1,-.5625,2,1.125);
+  
   def run {
     
     val img = new BufferedImage(Main.VIEW_WIDTH,Main.VIEW_HEIGHT,BufferedImage.TYPE_INT_RGB)
     val g = img.getGraphics
-    g.setColor(Color.WHITE)
+    g.setColor(Color.BLACK)
     g.fillRect(0, 0, Main.VIEW_WIDTH, Main.VIEW_HEIGHT)
     
-    g.setColor(Color.BLACK)
+    g.setColor(Color.GREEN)
      
-    val FLAT_SPACE = Main.SPACE.view(1,f=>f.edgeLength>2);//f=>f.center.mag/f.edgeLength<10
+    Main.SPACE.view(1d)(0).asInstanceOf[Frame].view(1d)(0).draw(g,p=>{
+      val x = ((p.translation(0)-view._1)/view._3*Main.VIEW_WIDTH).toInt
+      val y = ((p.translation(1)*(-1)-view._2)/view._4*Main.VIEW_HEIGHT).toInt
+      (x,y,x>=0&&y>=0&&x<=Main.VIEW_WIDTH&&y<=Main.VIEW_HEIGHT)
+    })
     
-    lineDrawFlatSpace(g, FLAT_SPACE,(-1,-.5625,2,1.125));
+    //val FLAT_SPACE = Main.SPACE.view(f=>f.center.mag/f.edgeLength<1);//
+    
+    //lineDrawFlatSpace(g, FLAT_SPACE,(-1,-.5625,2,1.125));
     
     Main.grid.draw(img)
   }
   
+  /*
   def lineDrawFlatSpace(g: Graphics, w: FlatSpace, view: (Double,Double,Double,Double)) {
     w.objs.foreach { o =>
       o.faces.foreach {f => {
@@ -44,4 +54,6 @@ class Draw extends TimerTask {
       }
     }
   }
+  */
+  
 }
